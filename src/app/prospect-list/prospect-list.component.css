@@ -1,0 +1,31 @@
+.rank-column {
+  width: 50px;
+}
+
+.player-column {
+
+}
+
+.school-column {
+  width: 200px;
+}
+
+.year-column {
+  width: 100px;
+}
+
+.position-column {
+  width: 100px;
+}
+
+.position-rank-column {
+  width: 100px;
+}
+
+.height-column {
+  width: 100px;
+}
+
+.weight-column {
+  width: 100px;
+}

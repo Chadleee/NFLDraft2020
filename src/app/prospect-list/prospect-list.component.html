@@ -1,0 +1,45 @@
+<div class="w-100 px-md-5 pt-md-3">
+
+  <div class="d-flex">
+    <div>
+      <label class="form-check-label" for="positionsDropdown">Positions</label>
+      <div ngbDropdown class="pb-md-3">
+        <button class="btn btn-outline-primary" id="positionsDropdown" ngbDropdownToggle>{{positionFilter}}</button>
+        <div ngbDropdownMenu aria-labelledby="positionsDropdown">
+          <button ngbDropdownItem *ngFor="let option of positionFilterOptions" (click)="positionDropdownChanged(option)">{{option}}</button>
+        </div>
+      </div>
+    </div>
+    <div class="mx-md-5 mt-md-4 clearfix">
+      <input type="checkbox" id="showAvailableCheckbox" aria-label="Checkbox for only show available" (click)="showAvailableCheckClicked()" checked="{{showOnlyAvailable ? 'checked' : undefined}}">
+      <label for="showAvailableCheckbox">Only show available</label>
+    </div>
+  </div>
+
+  <table class="table border">
+    <thead>
+    <tr>
+      <th class="rank-column">RK</th>
+      <th class="player-column">PLAYER</th>
+      <th class="school-column">SCHOOL</th>
+      <th class="year-column">YEAR</th>
+      <th class="position-column">POS</th>
+      <th class="position-rank-column">POS RK</th>
+      <th class="height-column">HT</th>
+      <th class="weight-column">WT</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let prospect of filteredProspects">
+      <td>{{prospect.rank}}</td>
+      <td>{{prospect.lastName + ', ' + prospect.firstName}}</td>
+      <td>{{prospect.school}}</td>
+      <td>{{prospect.year}}</td>
+      <td>{{prospect.position}}</td>
+      <td>{{prospect.positionRank}}</td>
+      <td>{{prospect.height | convertToFeet}}</td>
+      <td>{{prospect.weight}}</td>
+    </tr>
+    </tbody>
+  </table>
+</div>

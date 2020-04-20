@@ -1,0 +1,109 @@
+<div class="w-100 px-md-5 pt-md-3">
+
+  <label class="form-check-label" for="teamsDropdown">Teams</label>
+  <div ngbDropdown class="pb-md-3">
+    <button class="btn btn-outline-primary" id="teamsDropdown" ngbDropdownToggle>{{teamFilter}}</button>
+    <div ngbDropdownMenu aria-labelledby="teamsDropdown" class="selection-list">
+      <button ngbDropdownItem *ngFor="let team of teamFilterOptions" (click)="teamDropdownChanged(team)">{{team}}</button>
+    </div>
+  </div>
+
+  <table class="table border">
+    <thead>
+    <tr>
+      <th class="team-column">Team</th>
+      <th class="number-column">#</th>
+      <th class="player-column">Player</th>
+      <th class="position-column">Pos</th>
+      <th class="school-column">School</th>
+      <th class="delete-column"><fa-icon [icon]="faTrash"></fa-icon></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let pickSlot of filteredPickSlots">
+      <td>{{getTeam(pickSlot.team)}}</td>
+      <td *ngIf="pickSlot.receivedFrom">{{pickSlot.pickNumber}}<br />(from {{getTeam(pickSlot.receivedFrom)}})</td>
+      <td *ngIf="!pickSlot.receivedFrom">{{pickSlot.pickNumber}}</td>
+      <td colspan="4" *ngIf="!pickSlot.pick">
+        <button *ngIf="previousPickMade(pickSlot.pickNumber)" class="btn btn-outline-success px-md-3 mr-md-5" (click)="openPickSelection(selectionModal, pickSlot)">Make Pick</button>
+        <button class="btn btn-outline-primary px-md-3" (click)="openTrade(tradeModal, pickSlot)">Trade</button>
+      </td>
+      <td *ngIf="pickSlot.pick">{{pickSlot.pick.lastName + ', ' + pickSlot.pick.firstName}}</td>
+      <td *ngIf="pickSlot.pick">{{pickSlot.pick.position}}</td>
+      <td *ngIf="pickSlot.pick">{{pickSlot.pick.school}}</td>
+      <td *ngIf="pickSlot.pick"><fa-icon *ngIf="!nextPickMade(pickSlot.pickNumber)" [icon]="faTrash" class="btn text-danger" (click)="removeProspect(pickSlot.pickNumber)"></fa-icon></td>
+    </tr>
+    </tbody>
+  </table>
+
+  <ng-template #selectionModal let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="selection-modal-title">Make Selection</h4>
+    </div>
+    <div class="modal-body">
+      <form>
+        <div class="form-group">
+          <div class="input-group">
+            <input type="text" class="form-control" placeholder="Search for Player" [(ngModel)]="playerNameFilter" name="playerNameInput">
+          </div>
+          <div class="selection-list border">
+            <ul class="list-unstyled">
+              <li *ngFor="let prospect of filteredProspects"><button class="btn btn-light btn-lg btn-block" (click)="modal.close(prospect)">{{prospect.firstName + ' ' + prospect.lastName + ' ' + prospect.position}}</button></li>
+            </ul>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outline-danger" (click)="modal.dismiss('Cross click')">Cancel</button>
+    </div>
+  </ng-template>
+
+  <ng-template #tradeModal let-modal>
+    <div class="modal-header">
+      <div><h4 class="modal-title">{{getTeam(trade.teamA)}}</h4></div><div><h4 class="modal-title">trade with</h4></div>
+      <div ngbDropdown class="pb-md-3">
+        <button class="btn btn-outline-primary" id="teamsTradeDropdown" ngbDropdownToggle>{{trade.teamB !== undefined ? getTeam(trade.teamB) : 'Select Team'}}</button>
+        <div ngbDropdownMenu aria-labelledby="teamsDropdown" class="selection-list">
+          <button ngbDropdownItem (click)="setTradeTeamB('')">Select Team</button>
+          <button ngbDropdownItem *ngFor="let team of tradeTeamsList" (click)="setTradeTeamB(team)">{{team}}</button>
+        </div>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="clearfix">
+        <div class="float-left">
+          <h5>Assets Given</h5>
+          <ul class="list-unstyled">
+            <li *ngFor="let asset of trade.picksGiven"><button class="btn btn-outline-danger" (click)="removeTradeAsset(asset, 'A')">Include pick {{asset}}</button></li>
+          </ul>
+        </div>
+        <div class="text-right">
+          <h5>Assets Received</h5>
+          <ul class="list-unstyled">
+            <li *ngFor="let asset of trade.picksReceived"><button class="btn btn-outline-danger" (click)="removeTradeAsset(asset, 'B')">Include pick {{asset}}</button></li>
+          </ul>
+        </div>
+      </div>
+      <hr />
+      <div class="clearfix">
+        <div class="float-left">
+          <h5>Available Assets</h5>
+          <ul class="list-unstyled">
+            <li *ngFor="let asset of teamATradeAssets"><button class="btn btn-outline-success" (click)="addTradeAsset(asset, 'A')">Include pick {{asset}}</button></li>
+          </ul>
+        </div>
+        <div class="text-right">
+          <h5>Available Assets</h5>
+          <ul class="list-unstyled">
+            <li *ngFor="let asset of teamBTradeAssets"><button class="btn btn-outline-success" (click)="addTradeAsset(asset, 'B')">Include pick {{asset}}</button></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="{{trade.teamB === undefined ? 'btn btn-outline-dark' : 'btn btn-outline-success'}}" (click)="modal.close('Cross click')" disabled="{{trade.teamB === undefined ? 'disabled' : undefined}}">Trade</button>
+      <button type="button" class="btn btn-outline-danger" (click)="modal.dismiss('Cross click')">Cancel</button>
+    </div>
+  </ng-template>
+</div>

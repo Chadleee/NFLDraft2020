@@ -1,0 +1,38 @@
+.selection-list {
+  overflow-y: scroll;
+  height: 400px;
+}
+
+.selection-list .btn-light {
+  background-color: white !important;
+  border-color: white !important;
+}
+
+.selection-list .btn-light:hover {
+  background-color: #e2e6ea !important;
+  border-color: #dae0e5 !important;
+}
+
+.team-column {
+  width: 100px;
+}
+
+.number-column {
+  width: 50px;
+}
+
+.player-column {
+
+}
+
+.position-column {
+  width: 100px;
+}
+
+.school-column {
+  width: 200px;
+}
+
+.delete-column {
+  width: 75px;
+}
